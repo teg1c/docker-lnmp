@@ -15,19 +15,20 @@ RUN apk --no-cache add tzdata \
     && cp "/usr/share/zoneinfo/$TZ" /etc/localtime \
     && echo "$TZ" > /etc/timezone
 
-
 COPY ./extensions /tmp/extensions
+
 WORKDIR /tmp/extensions
 
 ENV EXTENSIONS=",${PHP_EXTENSIONS},"
 ENV MC="-j$(nproc)"
-
+ADD ./composer.phar /usr/local/bin/composer
 RUN export MC="-j$(nproc)" \
     && chmod +x install.sh \
     && chmod +x "${MORE_EXTENSION_INSTALLER}" \
     && sh install.sh \
     && sh "${MORE_EXTENSION_INSTALLER}" \
-    && rm -rf /tmp/extensions
+    && rm -rf /tmp/extensions \
+    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
