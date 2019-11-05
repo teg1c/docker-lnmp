@@ -6,11 +6,9 @@ ARG PHP_EXTENSIONS
 ARG MORE_EXTENSION_INSTALLER
 ARG ALPINE_REPOSITORIES
 
-RUN if [ "${ALPINE_REPOSITORIES}" != "" ]; then \
-        sed -i "s/dl-cdn.alpinelinux.org/${ALPINE_REPOSITORIES}/g" /etc/apk/repositories; \
-    fi
-
-
+# 修改镜像源
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN docker-php-ext-install -j$(nproc) bcmath calendar exif gettext sockets dba mysqli pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm iconv
 RUN apk --no-cache add tzdata \
     && cp "/usr/share/zoneinfo/$TZ" /etc/localtime \
     && echo "$TZ" > /etc/timezone
