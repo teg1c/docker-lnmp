@@ -1,0 +1,114 @@
+version: "3"
+services:
+
+  nginx:
+    image: nginx:1.17.3
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - D:/www/wwwroot:/var/www/html/:rw
+      - ./conf/conf.d:/etc/nginx/conf.d/:rw
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./log/nginx:/var/log/nginx/:rw
+    environment:
+      TZ: "Asia/Shanghai"
+    restart: always
+    container_name: "tegic-nginx"
+    networks:
+      - default
+
+
+  php72:
+    build:
+      context: .
+      args:
+        PHP_VERSION: 7.2.19
+        ALPINE_REPOSITORIES: mirrors.aliyun.com
+        PHP_EXTENSIONS: pdo_mysql,mysqli,mbstring,gd,curl,opcache,swoole,mongodb,redis
+        MORE_EXTENSION_INSTALLER: php72.sh
+        TZ: "Asia/Shanghai"
+    volumes:
+      - D:/www/wwwroot:/var/www/html/:rw
+      - ./conf/php.ini:/usr/local/etc/php/php.ini:rw
+#      - ./conf/php.ini.d/:/usr/local/etc/php/conf.d/:rw
+      - ./log/php:/var/log/php
+      - C:/Users/Administrator/AppData/Local/Composer/repo/:/root/.composer/cache/repo/:rw
+    restart: always
+    container_name: "tegic-php72"
+    ports:
+      - "9501:9501"
+      - "9502:9502"
+    cap_add:
+      - SYS_PTRACE
+    networks:
+      - default
+
+  mysql:
+    image: mysql:5.7.27
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+      - ./mysql:/var/lib/mysql/:rw
+    restart: always
+    container_name: "tegic-mysql"
+    networks:
+      - default
+    environment:
+      MYSQL_ROOT_PASSWORD: "11111111"
+      TZ: "Asia/Shanghai"
+
+  redis:
+    image: redis:5.0.5
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./conf/redis.conf:/etc/redis.conf:ro
+    restart: always
+    container_name: "tegic-redis"
+    entrypoint: ["redis-server", "/etc/redis.conf"]
+    environment:
+      TZ: "Asia/Shanghai"
+    networks:
+      - default
+
+
+  rabbitmq:
+    image: rabbitmq:management
+    restart: always
+    container_name: "tegic-rabbitmq"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "15674:15674"
+      - "15670:15670"
+    environment:
+       TZ: "Asia/Shanghai"
+       RABBITMQ_DEFAULT_USER: "admin"
+       RABBITMQ_DEFAULT_PASS: "admin"
+    networks:
+          - default
+
+
+  elasticsearch:
+    image: elasticsearch:7.1.1
+    environment:
+      - TZ=Asia/Shanghai
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./esdata:/usr/share/elasticsearch/data
+    hostname: elasticsearch
+    container_name: "tegic-es"
+    restart: always
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+volumes:
+  esdata:
+    driver: local
+
+networks:
+  default:
