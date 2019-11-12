@@ -22,6 +22,7 @@ ENV MC="-j$(nproc)"
 ADD ./composer.phar /usr/local/bin/composer
 RUN export MC="-j$(nproc)" \
     && chmod +x install.sh \
+    && chmod +x /usr/local/bin/composer \
     && chmod +x "${MORE_EXTENSION_INSTALLER}" \
     && sh install.sh \
     && sh "${MORE_EXTENSION_INSTALLER}" \
