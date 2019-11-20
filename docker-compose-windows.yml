@@ -17,13 +17,11 @@ services:
     container_name: "tegic-nginx"
     networks:
       - default
-
-
   php72:
     build:
       context: .
       args:
-        PHP_VERSION: 7.2.19
+        PHP_VERSION: 7.2.24
         ALPINE_REPOSITORIES: mirrors.aliyun.com
         PHP_EXTENSIONS: pdo_mysql,mysqli,mbstring,gd,curl,opcache,swoole,mongodb,redis
         MORE_EXTENSION_INSTALLER: php72.sh
@@ -31,7 +29,7 @@ services:
     volumes:
       - D:/www/wwwroot:/var/www/html/:rw
       - ./conf/php.ini:/usr/local/etc/php/php.ini:rw
-#      - ./conf/php.ini.d/:/usr/local/etc/php/conf.d/:rw
+      #      - ./conf/php.ini.d/:/usr/local/etc/php/conf.d/:rw
       - ./log/php:/var/log/php
       - C:/Users/Administrator/AppData/Local/Composer/repo/:/root/.composer/cache/repo/:rw
     restart: always
@@ -84,11 +82,11 @@ services:
       - "15674:15674"
       - "15670:15670"
     environment:
-       TZ: "Asia/Shanghai"
-       RABBITMQ_DEFAULT_USER: "admin"
-       RABBITMQ_DEFAULT_PASS: "admin"
+      TZ: "Asia/Shanghai"
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
     networks:
-          - default
+      - default
 
 
   elasticsearch:
