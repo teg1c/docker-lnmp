@@ -24,7 +24,7 @@ RUN export MC="-j$(nproc)" \
     && chmod +x install.sh \
     && chmod +x /usr/local/bin/composer \
     && chmod +x "${MORE_EXTENSION_INSTALLER}" \
-#    && sh install.sh \
+    && sh install.sh \
     && sh "${MORE_EXTENSION_INSTALLER}" \
     && rm -rf /tmp/extensions \
     && composer config -g repos.packagist composer https://php.cnpkg.org
