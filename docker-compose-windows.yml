@@ -23,7 +23,7 @@ services:
       args:
         PHP_VERSION: 7.2.24
         ALPINE_REPOSITORIES: mirrors.aliyun.com
-        PHP_EXTENSIONS: pdo_mysql,mysqli,mbstring,gd,curl,opcache,swoole,mongodb,redis
+        PHP_EXTENSIONS: pdo_mysql,mysqli,mbstring,gd,curl,opcache,swoole,mongodb,redis,zip
         MORE_EXTENSION_INSTALLER: php72.sh
         TZ: "Asia/Shanghai"
     volumes:

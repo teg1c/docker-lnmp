@@ -8,7 +8,7 @@ ARG ALPINE_REPOSITORIES
 
 # 修改镜像源
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
-RUN docker-php-ext-install -j$(nproc) bcmath sockets pcntl
+
 RUN apk --no-cache add tzdata \
     && cp "/usr/share/zoneinfo/$TZ" /etc/localtime \
     && echo "$TZ" > /etc/timezone
@@ -30,5 +30,5 @@ RUN export MC="-j$(nproc)" \
     && composer config -g repos.packagist composer https://php.cnpkg.org
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
-
+RUN docker-php-ext-install -j$(nproc) bcmath sockets pcntl
 WORKDIR /var/www/html

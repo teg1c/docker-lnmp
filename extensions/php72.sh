@@ -103,3 +103,8 @@ if [ -z "${EXTENSIONS##*,sqlsrv,*}" ]; then
     printf "\n" | pecl install sqlsrv
     docker-php-ext-enable sqlsrv
 fi
+if [ -z "${EXTENSIONS##*,zip,*}" ]; then
+    echo "---------- Install zip ----------"
+	  apk add --no-cache unixodbc-dev
+    docker-php-ext-install zip
+fi
